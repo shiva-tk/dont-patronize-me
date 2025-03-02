@@ -1,2 +1,10 @@
 #+title: Don't Patronize Me
-#+author: Shiva Tamil Kumaran, Samar Aswani, Jai Hindocha
+#+author: Shiva Tamil Kumaran
+#+author: Samar Aswani
+#+author: Jai Hindocha
+
+* Overview
+
+This repository contains the code and experiments for the COMP70016 NLP coursework,
+which involves developing a binary classification model to predict whether a text contains
+/patronising and condescending language (PCL)/. This task is based on SemEval 2022 Task 4 (Subtask 1).
