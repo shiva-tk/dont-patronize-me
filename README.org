@@ -3,7 +3,7 @@
 #+author: Samar Aswani
 #+author: Jai Hindocha
 
-* Overview
+** Overview
 
 This repository contains the code and experiments for the COMP70016 NLP coursework,
 which involves developing a binary classification model to predict whether a text contains
