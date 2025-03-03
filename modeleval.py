@@ -7,6 +7,7 @@ import torch
 from sklearn.metrics import f1_score
 from abc import ABC, abstractmethod
 from datasets import Dataset
+from collections import Counter
 
 class AugmentationStrategy(ABC):
 
@@ -20,10 +21,6 @@ def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs
     df = pd.read_csv(train_df)
     dataset = Dataset.from_pandas(df)
 
-    # Apply augmentation if provided
-    if augmentation_strategy:
-        dataset = augmentation_strategy.augment_data(dataset)
-
     # Initialize tokenizer and model
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
     model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2)
@@ -31,8 +28,6 @@ def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs
     # Tokenize the dataset
     def tokenize_function(examples):
         return tokenizer(examples['text'], padding="max_length", truncation=True)
-
-    dataset = dataset.map(tokenize_function, batched=True)
 
     # Check for GPU (CUDA)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -47,6 +42,19 @@ def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs
 
         train_dataset = dataset.select(train_idx)
         val_dataset = dataset.select(val_idx)
+
+        # Apply augmentation if provided
+        if augmentation_strategy:
+            train_dataset = augmentation_strategy.augment_data(dataset)
+
+        print(Counter(train_dataset["label"]))
+
+        train_dataset = dataset.map(tokenize_function, batched=True)
+        val_dataset = dataset.map(tokenize_function, batched=True)
+
+        print(train_dataset)
+        print(val_dataset)
+
 
         model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2)
 
