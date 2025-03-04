@@ -16,7 +16,7 @@ class AugmentationStrategy(ABC):
         pass
 
 # Given a model setup, it evaluates it using cross-validation
-def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs=3, learning_rate=3e-5, batch_size=8, lr_scheduler="linear"):
+def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs=3, learning_rate=3e-5, batch_size=8, lr_scheduler="linear", skip_folds=0):
     # Load dataset
     df = pd.read_csv(train_df)
     dataset = Dataset.from_pandas(df)
@@ -38,6 +38,10 @@ def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs
     results = []
 
     for fold, (train_idx, val_idx) in enumerate(kfold.split(dataset, dataset['label'])):
+        if skip_folds > 0:
+            skip_folds -= 1
+            continue
+        
         print(f"Training fold {fold+1}...")
 
         train_dataset = dataset.select(train_idx)
@@ -45,12 +49,12 @@ def evaluate_model(train_df="data/train.csv", augmentation_strategy=None, epochs
 
         # Apply augmentation if provided
         if augmentation_strategy:
-            train_dataset = augmentation_strategy.augment_data(dataset)
+            train_dataset = augmentation_strategy.augment_data(train_dataset)
 
         print(Counter(train_dataset["label"]))
 
-        train_dataset = dataset.map(tokenize_function, batched=True)
-        val_dataset = dataset.map(tokenize_function, batched=True)
+        train_dataset = train_dataset.map(tokenize_function, batched=True)
+        val_dataset = val_dataset.map(tokenize_function, batched=True)
 
         print(train_dataset)
         print(val_dataset)
