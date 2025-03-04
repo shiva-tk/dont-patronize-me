@@ -8,3 +8,29 @@
 This repository contains the code and experiments for the COMP70016 NLP coursework,
 which involves developing a binary classification model to predict whether a text contains
 /patronising and condescending language (PCL)/. This task is based on SemEval 2022 Task 4 (Subtask 1).
+
+** Project Structure
+#+begin_src
+dont-patronize-me
+├── baselines                            Simple models against which we benchmark our model
+│   ├── bow.ipynb
+│   └── tfidf.ipynb
+├── data                                 Data used for training / evaluation
+│   ├── raw
+│   │   ├── dev-parids.csv               Rows for official dev split
+│   │   ├── dontpatronizeme.tsv          "Don't patronize me!" dataset
+│   │   └── train-parids.csv             Rows for official train split
+│   ├── complete.csv
+│   ├── dev.csv                          Preprocessed dev set
+│   ├── dev.txt                          Final model predictions for the dev set
+│   ├── reworded.csv                     LLM augmented samples, based on the train set
+│   └── train.csv                        Preprocessed train set
+├── scripts
+│   ├── preprocessing.py
+│   └── rewording.py
+├── analysis.ipynb                       Final analysis of the model's performance
+├── dataset.ipynb                        Initial analysis of the composition of the dataset
+├── experiments.ipynb                    Trialing model improvements / hyperparameter tuning
+├── modeleval.py                         Library to evaluate different models / hyperparameters
+└── README.org
+#+end_src
