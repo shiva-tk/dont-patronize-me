@@ -19,8 +19,11 @@ assert dev_parids_df["par_id"].is_unique
 # Par IDs should not overlap
 assert not train_parids_df["par_id"].isin(dev_parids_df["par_id"]).any()
 
+dev_parids_df.drop(columns=["label"])
+
 train_df= df[df["par_id"].isin(train_parids_df["par_id"])]
-dev_df= df[df["par_id"].isin(dev_parids_df["par_id"])]
+dev_df = dev_parids_df.merge(df, on="par_id", how="left")
+dev_df = dev_df.rename(columns={"label_y": "label"})
 
 train_df.to_csv("data/train.csv", index=False)
 dev_df.to_csv("data/dev.csv", index=False)
